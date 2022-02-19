@@ -1,0 +1,27 @@
+version: 0.2
+
+phases:
+  pre_build:
+    commands:
+      - npm install --silent --no-progress -g npm
+      - npm install --silent --no-progress -g serverless
+      - npm install
+      - mkdir -p target/dev
+      - mkdir target/prd
+  build:
+    commands:
+      - serverless package --package target/dev --stage dev --region us-east-1
+      - serverless package --package target/prd --stage prd --region us-east-1
+
+cache:
+  paths:
+    - node_modules
+
+artifacts:
+  files:
+    - '**/*'
+    - target/**/*
+    - serverless.yml
+    - deploy.sh
+  name: aws-lambda-poc-service-artifact
+  discard-paths: no
